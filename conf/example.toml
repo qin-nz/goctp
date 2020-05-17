@@ -1,0 +1,8 @@
+[account]
+broker_id = "9999"
+investor_id = "123456"  # 把这里改成你的用户名和密码
+password = "123456"
+
+[md]
+front = ["tcp://180.168.146.187:10131"]
+subscribe = ["SR007", "SR009"]
