@@ -67,3 +67,5 @@ type CThostFtdcMdSpi interface {
 	CThostFtdcMdSpiQuote
 	CThostFtdcMdSpiError
 }
+
+var _ CThostFtdcMdSpi = libctp.NewDirectorCThostFtdcMdSpi(nil)
