@@ -20,13 +20,13 @@ func (p *apispi) ReqUserLogin(reqf libctp.CThostFtdcReqUserLoginField) error {
 	}
 
 	logrus.WithField("RequestID", reqid).Println("行情系统账号登陆中...")
-	err := p.s.Wait(signal.Login)
+	err := p.sig.Wait(signal.Login)
 	return err
 }
 
 // 登录请求响应
 func (p *apispi) OnRspUserLogin(pRspUserLogin libctp.CThostFtdcRspUserLoginField, pRspInfo libctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-	p.s.Trigger(signal.Login, nil) // nRequestID 返回恒为0，不能用
+	p.sig.Trigger(signal.Login, nil) // nRequestID 返回恒为0，不能用
 
 	if pRspInfo.GetErrorID() != 0 {
 		logrus.WithFields(logrus.Fields{

@@ -23,18 +23,17 @@ func New(mdFront []string) client {
 	}
 
 	api := libctp.CThostFtdcMdApiCreateFtdcMdApi(tempDir)
-	p := &apispi{api: api,
-		s: signal.NewManager(),
+	as := &apispi{api: api,
+		sig: signal.NewManager(),
 	}
 
-	spi := libctp.NewDirectorCThostFtdcMdSpi(p)
-	api.RegisterSpi(spi)
+	api.RegisterSpi(libctp.NewDirectorCThostFtdcMdSpi(as))
 
 	for _, val := range mdFront {
 		api.RegisterFront(val)
 	}
 
-	return client{md: p}
+	return client{md: as, Fronts: mdFront}
 }
 
 func (c *client) Init() error {

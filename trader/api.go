@@ -1,24 +1,18 @@
-package md
+package trader
 
-/*
-#include <stdio.h>
-#include <stdlib.h>
-*/
-import "C"
 import (
 	"sync"
 
-	"github.com/qin-nz/libctp"
-
 	"github.com/qin-nz/goctp/signal"
+	"github.com/qin-nz/libctp"
 )
 
 type apispi struct {
-	// 行情请求编号
+	// 请求编号
 	requestId int
 	idMutex   sync.Mutex
 
-	api libctp.CThostFtdcMdApi
+	api libctp.CThostFtdcTraderApi
 
 	// signal
 	sig signal.SignalManager
