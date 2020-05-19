@@ -34,8 +34,11 @@ func (p *apispi) OnRspUserLogin(pRspUserLogin libctp.CThostFtdcRspUserLoginField
 	err := comm.RspToError(pRspInfo)
 	if err != nil {
 		p.sig.Trigger(nRequestID, err)
+		return
 	}
 
-	logrus.Printf("交易账号已登录，当前交易日：%v\n", p.api.GetTradingDay())
+	logrus.WithFields(logrus.Fields{
+		"trader_day": p.api.GetTradingDay(),
+	}).Println("交易账号已登录")
 	p.sig.Trigger(nRequestID, nil)
 }

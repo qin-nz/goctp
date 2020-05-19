@@ -43,10 +43,20 @@ func (c *client) Init() error {
 	return c.tr.Init()
 }
 
+func (c *client) Auth(auth comm.ClientAuth, account comm.Account) error {
+	req := libctp.NewCThostFtdcReqAuthenticateField()
+	req.SetBrokerID(account.BrokerID)
+	req.SetUserID(account.UserID)
+	req.SetAppID(auth.AppID)
+	req.SetAuthCode(auth.AuthCode)
+
+	return c.tr.ReqAuthenticate(req)
+}
+
 func (c *client) Login(account comm.Account) error {
 	reqf := libctp.NewCThostFtdcReqUserLoginField()
 	reqf.SetBrokerID(account.BrokerID)
-	reqf.SetUserID(account.InvestorID)
+	reqf.SetUserID(account.UserID)
 	reqf.SetPassword(account.Password)
 
 	return c.tr.ReqUserLogin(reqf)

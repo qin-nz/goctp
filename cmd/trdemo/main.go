@@ -21,6 +21,7 @@ func main() {
 	tr := trader.New(config.Trader.Front)
 
 	tr.Init()
+	tr.Auth(config.ClientAuth, config.Account)
 	tr.Login(config.Account)
 
 	for {
@@ -34,6 +35,7 @@ type Trader struct {
 }
 
 type Config struct {
-	Account comm.Account `toml:"account"`
-	Trader  Trader       `toml:"trader"`
+	ClientAuth comm.ClientAuth `toml:"client_auth"`
+	Account    comm.Account    `toml:"account"`
+	Trader     Trader          `toml:"trader"`
 }

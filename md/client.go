@@ -43,7 +43,7 @@ func (c *client) Init() error {
 func (c *client) Login(account comm.Account) error {
 	reqf := libctp.NewCThostFtdcReqUserLoginField()
 	reqf.SetBrokerID(account.BrokerID)
-	reqf.SetUserID(account.InvestorID)
+	reqf.SetUserID(account.UserID)
 	reqf.SetPassword(account.Password)
 
 	return c.md.ReqUserLogin(reqf)
