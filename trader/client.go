@@ -10,8 +10,9 @@ import (
 )
 
 type client struct {
-	fronts []string
-	tr     *apispi
+	fronts  []string
+	tr      *apispi
+	account comm.Account
 }
 
 func New(traderFronts []string) client {
@@ -53,11 +54,22 @@ func (c *client) Auth(auth comm.ClientAuth, account comm.Account) error {
 	return c.tr.ReqAuthenticate(req)
 }
 
+func (c *client) Confirm() error {
+	confirm := libctp.NewCThostFtdcSettlementInfoConfirmField()
+	confirm.SetBrokerID(c.account.BrokerID)
+	confirm.SetInvestorID(c.account.UserID) //TOOD.InvestorID)
+	return c.tr.ReqSettlementInfoConfirm(confirm)
+}
+
 func (c *client) Login(account comm.Account) error {
 	reqf := libctp.NewCThostFtdcReqUserLoginField()
 	reqf.SetBrokerID(account.BrokerID)
 	reqf.SetUserID(account.UserID)
 	reqf.SetPassword(account.Password)
 
-	return c.tr.ReqUserLogin(reqf)
+	err := c.tr.ReqUserLogin(reqf)
+	if err == nil {
+		c.account = account
+	}
+	return err
 }

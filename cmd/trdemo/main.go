@@ -23,6 +23,7 @@ func main() {
 	tr.Init()
 	tr.Auth(config.ClientAuth, config.Account)
 	tr.Login(config.Account)
+	tr.Confirm()
 
 	for {
 		time.Sleep(time.Minute)
