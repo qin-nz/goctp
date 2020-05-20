@@ -1,8 +1,6 @@
 package main
 
 import (
-	"time"
-
 	"github.com/BurntSushi/toml"
 	"github.com/qin-nz/goctp/comm"
 	"github.com/qin-nz/goctp/trader"
@@ -23,11 +21,9 @@ func main() {
 	tr.Init()
 	tr.Auth(config.ClientAuth, config.Account)
 	tr.Login(config.Account)
-	tr.Confirm()
+	tr.QrySettlementInfo()
+	tr.SettlementInfoConfirm()
 
-	for {
-		time.Sleep(time.Minute)
-	}
 }
 
 type Trader struct {

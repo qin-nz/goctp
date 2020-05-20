@@ -10,16 +10,10 @@ import (
 
 // 客户端认证
 func (p *apispi) ReqAuthenticate(reqf libctp.CThostFtdcReqAuthenticateField) error {
-
-	logrus.WithFields(logrus.Fields{
-		"broker_id": reqf.GetBrokerID(),
-		"user_id":   reqf.GetUserID(),
-		"app_id":    reqf.GetAppID(),
-	}).Println("交易系统客户端认证")
-
 	reqID := p.newRequestId()
 
 	result := p.api.ReqAuthenticate(reqf, reqID)
+	comm.LogReq(reqID, "交易系统客户端认证", result, reqf)
 
 	if result != 0 {
 		return errors.New("客户端认证失败")

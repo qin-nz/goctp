@@ -2,6 +2,7 @@ package md
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/qin-nz/goctp/comm"
 	"github.com/qin-nz/libctp"
@@ -16,15 +17,13 @@ func (p *apispi) SubscribeMarketData(instrumentIDs ...string) error {
 		return nil
 	}
 
-	logrus.Println("订阅行情数据中...")
+	logrus.Infof("订阅行情数据: %s\n", strings.Join(instrumentIDs, ","))
 
 	insPtr := comm.StringSlice2C(instrumentIDs)
+	result := p.api.SubscribeMarketData(insPtr, len(instrumentIDs))
 
-	iResult := p.api.SubscribeMarketData(insPtr, len(instrumentIDs))
-
-	if iResult != 0 {
-		// TODO:显示错误详情
-		return fmt.Errorf("发送订阅行情请求失败！%d", iResult)
+	if result != 0 {
+		return fmt.Errorf("发送订阅行情请求失败！%d", result)
 	}
 
 	return nil
@@ -42,7 +41,7 @@ func (p *apispi) OnRspSubMarketData(pSpecificInstrument libctp.CThostFtdcSpecifi
 		}).Warn("行情订阅异常")
 	}
 
-	logrus.Printf("订阅合约 %#v 行情数据成功！ id %d\n", pSpecificInstrument.GetInstrumentID(), nRequestID)
+	logrus.Printf("订阅合约 %#v 行情数据成功！\n", pSpecificInstrument.GetInstrumentID())
 }
 
 // 深度行情通知
@@ -55,6 +54,6 @@ func (p *apispi) OnRtnDepthMarketData(pDepthMarketData libctp.CThostFtdcDepthMar
 		"卖一价":  pDepthMarketData.GetAskPrice1(),
 		"买一量":  pDepthMarketData.GetBidVolume1(),
 		"卖一量":  pDepthMarketData.GetAskVolume1(),
-	}).Info()
+	}).Infof(pDepthMarketData.GetInstrumentID())
 	// TODO: 返回 chan
 }

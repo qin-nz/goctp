@@ -2,7 +2,6 @@ package trader
 
 import (
 	"errors"
-	"time"
 
 	"github.com/qin-nz/goctp/comm"
 	"github.com/qin-nz/libctp"
@@ -11,16 +10,10 @@ import (
 
 // 用户登录请求
 func (p *apispi) ReqUserLogin(reqf libctp.CThostFtdcReqUserLoginField) error {
-
-	time.Sleep(time.Second * 1)
-
-	logrus.WithFields(logrus.Fields{
-		"broker_id": reqf.GetBrokerID(),
-		"user_id":   reqf.GetUserID(),
-	}).Println("交易系统账号登陆中...")
-
 	reqID := p.newRequestId()
+
 	result := p.api.ReqUserLogin(reqf, reqID)
+	comm.LogReq(reqID, "交易系统账号登录", result, reqf)
 
 	if result != 0 {
 		return errors.New("发送用户登录请求失败！")

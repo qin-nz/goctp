@@ -16,7 +16,12 @@ func RspToError(pRspInfo libctp.CThostFtdcRspInfoField) error {
 	caller := runtime.FuncForPC(fpcs[0])
 	file, line := caller.FileLine(fpcs[0])
 
-	if pRspInfo.GetErrorID() != 0 {
+	// pRspInfo 为 C 的空指针，表示无错误
+	if uintptr(pRspInfo.(libctp.SwigcptrCThostFtdcRspInfoField)) == 0 {
+		return nil
+	}
+
+	if pRspInfo == nil || pRspInfo.GetErrorID() != 0 {
 		logrus.WithFields(logrus.Fields{
 			"func":     caller.Name(),
 			"location": fmt.Sprintf("%s:%d", file, line),

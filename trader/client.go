@@ -54,7 +54,14 @@ func (c *client) Auth(auth comm.ClientAuth, account comm.Account) error {
 	return c.tr.ReqAuthenticate(req)
 }
 
-func (c *client) Confirm() error {
+func (c *client) QrySettlementInfo() error {
+	f := libctp.NewCThostFtdcQrySettlementInfoField()
+	f.SetAccountID(c.account.UserID)
+	f.SetBrokerID(c.account.BrokerID)
+	return c.tr.ReqQrySettlementInfo(f)
+}
+
+func (c *client) SettlementInfoConfirm() error {
 	confirm := libctp.NewCThostFtdcSettlementInfoConfirmField()
 	confirm.SetBrokerID(c.account.BrokerID)
 	confirm.SetInvestorID(c.account.UserID) //TOOD.InvestorID)

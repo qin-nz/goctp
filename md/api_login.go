@@ -3,6 +3,7 @@ package md
 import (
 	"errors"
 
+	"github.com/qin-nz/goctp/comm"
 	"github.com/qin-nz/goctp/signal"
 	"github.com/qin-nz/libctp"
 	"github.com/sirupsen/logrus"
@@ -10,16 +11,15 @@ import (
 
 // 行情用户登录
 func (p *apispi) ReqUserLogin(reqf libctp.CThostFtdcReqUserLoginField) error {
-	reqid := p.newRequestId()
+	reqID := p.newRequestId()
 
-	ret := p.api.ReqUserLogin(reqf, reqid)
+	result := p.api.ReqUserLogin(reqf, reqID)
+	comm.LogReq(reqID, "行情系统账号登陆中...", result, reqf)
 
-	if ret != 0 {
-		// TODO: 获取具体的 return msg
+	if result != 0 {
 		return errors.New("发送用户登录请求失败！")
 	}
 
-	logrus.WithField("RequestID", reqid).Println("行情系统账号登陆中...")
 	err := p.sig.Wait(signal.Login)
 	return err
 }
